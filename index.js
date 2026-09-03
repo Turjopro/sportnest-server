@@ -248,6 +248,12 @@ app.get('/', (req, res) => {
   res.send('SportNest server is running');
 });
 
+
+// Global error handler - catches unexpected errors in any route
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send({ message: 'Something went wrong on the server' });
+});
 app.listen(port, () => {
   console.log(`SportNest server listening on port ${port}`);
 });
