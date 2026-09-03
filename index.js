@@ -110,6 +110,22 @@ async function run() {
     // Add a new facility (private)
     app.post('/facilities', verifyToken, async (req, res) => {
       const facility = req.body;
+
+      const requiredFields = [
+        'name',
+        'facility_type',
+        'image',
+        'location',
+        'price_per_hour',
+        'capacity',
+      ];
+      const missingField = requiredFields.find((field) => !facility[field]);
+      if (missingField) {
+        return res
+          .status(400)
+          .send({ message: `Missing required field: ${missingField}` });
+      }
+
       facility.booking_count = 0;
       const result = await facilitiesCollection.insertOne(facility);
       res.send(result);
@@ -158,6 +174,22 @@ async function run() {
     // Create a booking (private)
     app.post('/bookings', verifyToken, async (req, res) => {
       const booking = req.body;
+
+      const requiredFields = [
+        'facility_id',
+        'user_email',
+        'booking_date',
+        'time_slot',
+        'hours',
+        'total_price',
+      ];
+      const missingField = requiredFields.find((field) => !booking[field]);
+      if (missingField) {
+        return res
+          .status(400)
+          .send({ message: `Missing required field: ${missingField}` });
+      }
+
       booking.status = 'pending';
 
       if (booking.user_email !== req.user.email) {
