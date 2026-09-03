@@ -237,6 +237,11 @@ async function run() {
       res.send(result);
     });
 
+
+        // Create indexes for faster queries on frequently filtered fields
+    await facilitiesCollection.createIndex({ owner_email: 1 });
+    await bookingsCollection.createIndex({ user_email: 1 });
+
     console.log('Connected to MongoDB and routes are ready!');
   } finally {
     // keep connection open while server runs
